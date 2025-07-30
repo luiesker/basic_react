@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import Rollbar from 'rollbar';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+const rollbar = new Rollbar({
+  accessToken: 'YOUR_ACCESS_TOKEN',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
