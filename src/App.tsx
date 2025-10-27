@@ -23,7 +23,30 @@ function App() {
   };
 
   const checkout = () => {
+    // Simulate a subtle double-click error
+    let clicked = false;
+  
+    if (clicked) {
+      console.log('Checkout already in progress...');
+      throw new Error('Checkout error.');
+    }
+  
+    clicked = true;
+  
+    // Simulate a delay to reset the state
+    setTimeout(() => {
+      clicked = false;
+    }, 5000); // Reset after 5 seconds
+  
     throw new Error('Checkout error: Unable to process order.');
+  };
+
+  const test = () => {
+    throw new Error('Test error: Unable to process order because test.');
+  };
+
+  const trial = () => {
+    throw new Error('Test test');
   };
 
   return (
@@ -44,19 +67,19 @@ function App() {
           <div>
             <label>
               Card Number:
-              <input type="text" className="mask" placeholder="1234 5678 9012 3456" />
+              <input type="text" className="mask" placeholder="1234 5678 9012 3456" onClick={trial}/>
             </label>
           </div>
           <div>
             <label>
               Expiration Date:
-              <input type="text" className="mask" placeholder="MM/YY" />
+              <input type="text" className="dat" placeholder="MM/YY" />
             </label>
           </div>
           <div>
             <label>
               CVV:
-              <input type="text" className="mask" placeholder="123" />
+              <input type="text" className="dat" placeholder="123" onClick={test} />
             </label>
           </div>
         </div>
