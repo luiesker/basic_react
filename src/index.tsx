@@ -12,7 +12,7 @@ var transformer = function(payload: any) {
     };
 
 const rollbarConfig = {
-  accessToken: '4c6a61bd889a4bb3a8443d3c10eb11f09be997bb44d3c81d0d8ae0a7fa78fb6cf1d4256b05648b2bed51a9831632f3cc',
+  accessToken: '8bd244f3e70547379e9adc8a20d8b407',
   captureUncaught: true,
   captureUnhandledRejections: true,
   environment: 'qa',
