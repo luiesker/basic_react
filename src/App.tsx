@@ -22,9 +22,10 @@ function App() {
     setCart([...cart, item]);
   };
 
+  let clicked = false;
+
   const checkout = () => {
     // Simulate a subtle double-click error
-    let clicked = false;
   
     if (clicked) {
       console.log('Checkout already in progress...');
@@ -32,13 +33,14 @@ function App() {
     }
   
     clicked = true;
+    console.log('Processing checkout...');
   
     // Simulate a delay to reset the state
     setTimeout(() => {
       clicked = false;
     }, 5000); // Reset after 5 seconds
   
-    throw new Error('Checkout error: Unable to process order.');
+    //throw new Error('Checkout error: Unable to process order.');
   };
 
   const test = () => {
