@@ -22,25 +22,33 @@ function App() {
     setCart([...cart, item]);
   };
 
-  let clicked = false;
+  let isProcessing = false; // Persistent state to track if checkout is in progress
 
   const checkout = () => {
-    // Simulate a subtle double-click error
-  
-    if (clicked) {
-      console.log('Checkout already in progress...');
-      throw new Error('Checkout error.');
+    if (isProcessing) {
+      console.error('Checkout already in progress. Please wait.');
+      return; // Prevent further execution if already processing
     }
   
-    clicked = true;
+    isProcessing = true;
+  
     console.log('Processing checkout...');
   
-    // Simulate a delay to reset the state
+    // Simulate an API call or some asynchronous operation
     setTimeout(() => {
-      clicked = false;
-    }, 5000); // Reset after 5 seconds
+      // Randomly simulate a success or failure
+      const success = Math.random() > 0.5;
   
-    //throw new Error('Checkout error: Unable to process order.');
+      if (success) {
+        console.log('Checkout completed successfully!');
+      } else {
+        console.error('Checkout failed due to a server error.');
+        throw new Error('Checkout error: Unable to process order.');
+      }
+  
+      // Reset the processing state after the operation
+      isProcessing = false;
+    }, 3000); // Simulate a 3-second delay
   };
 
   const test = () => {
