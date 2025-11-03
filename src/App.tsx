@@ -18,13 +18,12 @@ function App() {
   const [cart, setCart] = useState<SchoolSupply[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<SchoolSupply[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false); // Use React state instead of local variable
+  const [isSearching, setIsSearching] = useState(false); // Use React state instead of local variable
 
   const addToCart = (item: SchoolSupply) => {
     setCart([...cart, item]);
   };
-
-  let isProcessing = false; // Persistent state to track if checkout is in progress
-  let isSearching = false; // Persistent state to track if search is in progress
 
   const checkout = () => {
     if (isProcessing) {
@@ -32,24 +31,28 @@ function App() {
       return; // Prevent further execution if already processing
     }
 
-    isProcessing = true;
+    setIsProcessing(true);
 
     console.log('Processing checkout...');
 
     // Simulate an API call or some asynchronous operation
     setTimeout(() => {
-      // Randomly simulate a success or failure
-      const success = Math.random() > 0.5;
+      try {
+        // Randomly simulate a success or failure
+        const success = Math.random() > 0.5;
 
-      if (success) {
-        console.log('Checkout completed successfully!');
-      } else {
-        console.error('Checkout failed due to a server error.');
-        throw new Error('Checkout error: Unable to process order.');
+        if (success) {
+          console.log('Checkout completed successfully!');
+        } else {
+          console.error('Checkout failed due to a server error.');
+          throw new Error('Checkout error: Unable to process order.');
+        }
+      } catch (error) {
+        console.error('Checkout error:', error);
+      } finally {
+        // Always reset the processing state
+        setIsProcessing(false);
       }
-
-      // Reset the processing state after the operation
-      isProcessing = false;
     }, 3000); // Simulate a 3-second delay
   };
 
@@ -59,29 +62,34 @@ function App() {
       return; // Prevent further execution if already searching
     }
   
-    isSearching = true;
+    setIsSearching(true);
   
     console.log('Searching for:', searchTerm);
   
     // Simulate an asynchronous search operation
     setTimeout(() => {
-      // Introduce a race condition by clearing the searchTerm after the first click
-      const term = searchTerm; // Capture the current value of searchTerm
-      setSearchTerm(undefined as any); // Clear the search term asynchronously
-  
-      // Simulate a delay where the second click happens after the term is cleared
-      setTimeout(() => {
-        // Attempt to call .toLowerCase() on the cleared (undefined) searchTerm
-        const results = schoolSupplies.filter((item) =>
-          item.name.toLowerCase().includes(term!.toLowerCase()) // This will throw if term is undefined
-        );
-  
-        setSearchResults(results);
-  
-        // Reset the searching state after the operation
-        isSearching = false;
-      }, 500); // Simulate a delay for the second click
-    }, 500); // Simulate a 500ms delay for the first search
+      try {
+        // Capture the current value of searchTerm safely
+        const term = searchTerm;
+        
+        // Add null/undefined check before using the search term
+        if (term && term.trim()) {
+          const results = schoolSupplies.filter((item) =>
+            item.name.toLowerCase().includes(term.toLowerCase())
+          );
+          setSearchResults(results);
+        } else {
+          // If search term is empty, show all items
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        // Always reset the searching state
+        setIsSearching(false);
+      }
+    }, 500); // Simulate a 500ms delay for the search
   };
 
   return (
