@@ -28,6 +28,12 @@ function App() {
   const checkout = () => {
     if (isProcessing) {
       console.error('Checkout already in progress. Please wait.');
+      // @ts-ignore
+      window.Rollbar?.warning('Duplicate checkout attempt', {
+        userId: 'user123',
+        cartItems: cart.length,
+        timestamp: new Date().toISOString()
+      });
       return; // Prevent further execution if already processing
     }
 
@@ -43,12 +49,34 @@ function App() {
 
         if (success) {
           console.log('Checkout completed successfully!');
+          // @ts-ignore
+          window.Rollbar?.info('Checkout completed successfully', {
+            cartTotal: cart.reduce((sum, item) => sum + item.price, 0),
+            itemCount: cart.length,
+            userId: 'user123'
+          });
         } else {
           console.error('Checkout failed due to a server error.');
+          // @ts-ignore
+          window.Rollbar?.error('Checkout payment processing failed', {
+            cartItems: cart,
+            cartTotal: cart.reduce((sum, item) => sum + item.price, 0),
+            userId: 'user123',
+            timestamp: new Date().toISOString(),
+            paymentMethod: 'credit_card',
+            errorCode: 'PAYMENT_DECLINED'
+          });
           throw new Error('Checkout error: Unable to process order.');
         }
       } catch (error) {
         console.error('Checkout error:', error);
+        // @ts-ignore
+        window.Rollbar?.error('Checkout exception occurred', {
+          error: error,
+          cartItems: cart,
+          userId: 'user123',
+          stackTrace: error instanceof Error ? error.stack : 'No stack trace available'
+        });
       } finally {
         // Always reset the processing state
         setIsProcessing(false);
@@ -59,6 +87,12 @@ function App() {
   const handleSearch = () => {
     if (isSearching) {
       console.error('Search already in progress. Please wait.');
+      // @ts-ignore
+      window.Rollbar?.warning('Duplicate search attempt', {
+        searchTerm: searchTerm,
+        userId: 'user123',
+        timestamp: new Date().toISOString()
+      });
       return; // Prevent further execution if already searching
     }
   
@@ -84,6 +118,14 @@ function App() {
         }
       } catch (error) {
         console.error('Search error:', error);
+        // @ts-ignore
+        window.Rollbar?.error('Search operation failed', {
+          error: error,
+          searchTerm: searchTerm,
+          userId: 'user123',
+          timestamp: new Date().toISOString(),
+          stackTrace: error instanceof Error ? error.stack : 'No stack trace available'
+        });
         setSearchResults([]);
       } finally {
         // Always reset the searching state
