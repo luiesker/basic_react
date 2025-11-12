@@ -44,8 +44,27 @@ function App() {
     // Simulate an API call or some asynchronous operation
     setTimeout(() => {
       try {
-        // Randomly simulate a success or failure
-        const success = Math.random() > 0.5;
+        // Simulate random unhandled errors that Rollbar will catch automatically
+        const errorType = Math.floor(Math.random() * 5);
+        
+        if (errorType === 0) {
+          // Uncaught TypeError - accessing property of null
+          const nullObject: any = null;
+          console.log(nullObject.nonExistentProperty);
+        } else if (errorType === 1) {
+          // Uncaught ReferenceError - using undefined variable
+          // @ts-ignore
+          console.log(undefinedVariable.someProperty);
+        } else if (errorType === 2) {
+          // Network-like error that gets thrown
+          throw new Error('Payment gateway timeout - connection refused');
+        } else if (errorType === 3) {
+          // JSON parsing error
+          JSON.parse('invalid json {');
+        }
+
+        // Randomly simulate a success or failure for valid cases
+        const success = Math.random() > 0.3;
 
         if (success) {
           console.log('Checkout completed successfully!');
@@ -103,6 +122,22 @@ function App() {
     // Simulate an asynchronous search operation
     setTimeout(() => {
       try {
+        // Simulate random unhandled errors that Rollbar will catch automatically
+        const errorType = Math.floor(Math.random() * 4);
+        
+        if (errorType === 0) {
+          // Uncaught TypeError - trying to call a method on undefined
+          const undefinedFunction: any = undefined;
+          undefinedFunction.search(searchTerm);
+        } else if (errorType === 1) {
+          // Array access error - trying to access property of undefined array element
+          const emptyArray: any[] = [];
+          console.log(emptyArray[999].name);
+        } else if (errorType === 2) {
+          // Regular expression error
+          new RegExp('[invalid regex');
+        }
+
         // Capture the current value of searchTerm safely
         const term = searchTerm;
         
