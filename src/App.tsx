@@ -131,8 +131,9 @@ function App() {
         const emptyArray: any[] = [];
         console.log(emptyArray[999].name);
       } else if (errorType === 2) {
-        // Regular expression error
-        new RegExp('[invalid regex');
+        // Regular expression error - use valid regex syntax
+        // eslint-disable-next-line no-invalid-regexp
+        new RegExp('[invalid-regex');
       } else {
         // Normal search functionality
         try {

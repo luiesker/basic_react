@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider, ErrorBoundary, LEVEL_WARN, RollbarContext, useRollbar } from '@rollbar/react' // <-- Provider imports 'rollbar' for us
+import { Provider, ErrorBoundary, LEVEL_WARN, useRollbar } from '@rollbar/react' // <-- Provider imports 'rollbar' for us
 import Rollbar from "rollbar/replay";
 
 var transformer = function(payload: any) {
