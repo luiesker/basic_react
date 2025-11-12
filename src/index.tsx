@@ -39,11 +39,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider instance={rollbar} >
-    <ErrorBoundary level={LEVEL_WARN}>
-
-      <App />
-    </ErrorBoundary>
-</Provider>
+    <App />
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

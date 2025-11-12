@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRollbar } from '@rollbar/react';
 import './App.css';
 
 type SchoolSupply = {
@@ -15,6 +16,8 @@ const schoolSupplies: SchoolSupply[] = [
 ];
 
 function App() {
+  const rollbar = useRollbar();
+  
   const [cart, setCart] = useState<SchoolSupply[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<SchoolSupply[]>([]);
@@ -27,8 +30,13 @@ function App() {
 
   const checkout = () => {
     if (isProcessing) {
-      throw new Error('Checkout already in progress. Please wait.');
-      // @ts-ignore
+      console.error('Checkout already in progress. Please wait.');
+      rollbar.warning('Duplicate checkout attempt', {
+        userId: 'user123',
+        cartItems: cart.length,
+        timestamp: new Date().toISOString()
+      });
+      return;
     }
 
     setIsProcessing(true);
@@ -62,29 +70,47 @@ function App() {
 
         if (success) {
           console.log('Checkout completed successfully!');
-          // @ts-ignore
-
+          rollbar.info('Checkout completed successfully', {
+            cartTotal: cart.reduce((sum, item) => sum + item.price, 0),
+            itemCount: cart.length,
+            userId: 'user123'
+          });
         } else {
           console.error('Checkout failed due to a server error.');
-          // @ts-ignore
-          throw new Error('Checkout payment processing failed');
+          rollbar.error('Checkout payment processing failed', {
+            cartItems: cart,
+            cartTotal: cart.reduce((sum, item) => sum + item.price, 0),
+            userId: 'user123',
+            timestamp: new Date().toISOString(),
+            paymentMethod: 'credit_card',
+            errorCode: 'PAYMENT_DECLINED'
+          });
+          throw new Error('Checkout error: Unable to process order.');
         }
       } catch (error) {
-        throw new Error('Checkout exception occurred');
-
+        console.error('Checkout error:', error);
+        rollbar.error('Checkout exception occurred', {
+          error: error,
+          cartItems: cart,
+          userId: 'user123',
+          stackTrace: error instanceof Error ? error.stack : 'No stack trace available'
+        });
+        throw error; // Re-throw to ensure it becomes an unhandled error
       } finally {
-        // Always reset the processing state
         setIsProcessing(false);
       }
-    }, 3000); // Simulate a 3-second delay
+    }, 3000);
   };
 
   const handleSearch = () => {
     if (isSearching) {
       console.error('Search already in progress. Please wait.');
-      // @ts-ignore
-      throw new Error('Duplicate search attempt');
-      return; // Prevent further execution if already searching
+      rollbar.warning('Duplicate search attempt', {
+        searchTerm: searchTerm,
+        userId: 'user123',
+        timestamp: new Date().toISOString()
+      });
+      return;
     }
   
     setIsSearching(true);
@@ -93,45 +119,46 @@ function App() {
   
     // Simulate an asynchronous search operation
     setTimeout(() => {
-      try {
-        // Simulate random unhandled errors that Rollbar will catch automatically
-        const errorType = Math.floor(Math.random() * 4);
-        
-        if (errorType === 0) {
-          // Uncaught TypeError - trying to call a method on undefined
-          const undefinedFunction: any = undefined;
-          undefinedFunction.search(searchTerm);
-        } else if (errorType === 1) {
-          // Array access error - trying to access property of undefined array element
-          const emptyArray: any[] = [];
-          console.log(emptyArray[999].name);
-        } else if (errorType === 2) {
-          // Regular expression error
-          new RegExp('[invalid regex');
-        }
-
-        // Capture the current value of searchTerm safely
-        const term = searchTerm;
-        
-        // Add null/undefined check before using the search term
-        if (term && term.trim()) {
-          const results = schoolSupplies.filter((item) =>
-            item.name.toLowerCase().includes(term.toLowerCase())
-          );
-          setSearchResults(results);
-        } else {
-          // If search term is empty, show all items
+      // Simulate random unhandled errors that Rollbar will catch automatically
+      const errorType = Math.floor(Math.random() * 4);
+      
+      if (errorType === 0) {
+        // Uncaught TypeError - trying to call a method on undefined
+        const undefinedFunction: any = undefined;
+        undefinedFunction.search(searchTerm);
+      } else if (errorType === 1) {
+        // Array access error - trying to access property of undefined array element
+        const emptyArray: any[] = [];
+        console.log(emptyArray[999].name);
+      } else if (errorType === 2) {
+        // Regular expression error
+        new RegExp('[invalid regex');
+      } else {
+        // Normal search functionality
+        try {
+          const term = searchTerm;
+          
+          if (term && term.trim()) {
+            const results = schoolSupplies.filter((item) =>
+              item.name.toLowerCase().includes(term.toLowerCase())
+            );
+            setSearchResults(results);
+          } else {
+            setSearchResults([]);
+          }
+        } catch (error) {
+          rollbar.error('Search operation failed', {
+            error: error,
+            searchTerm: searchTerm,
+            userId: 'user123',
+            timestamp: new Date().toISOString()
+          });
           setSearchResults([]);
         }
-      } catch (error) {
-        throw new Error('Search error:' + error);
-
-    
-      } finally {
-        // Always reset the searching state
-        setIsSearching(false);
       }
-    }, 500); // Simulate a 500ms delay for the search
+      
+      setIsSearching(false);
+    }, 500);
   };
 
   return (
