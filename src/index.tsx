@@ -39,7 +39,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider instance={rollbar} >
-    <App />
+    <ErrorBoundary level={LEVEL_WARN}>
+      <App />
+    </ErrorBoundary>
   </Provider>
 );
 
