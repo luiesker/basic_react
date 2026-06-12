@@ -35,7 +35,7 @@ server: {
           username: "john-doe"
         },
         server: {
-          root: "../../",
+          root: "/",
           branch: "main"
         },
         client: {
