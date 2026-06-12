@@ -22,6 +22,7 @@ const rollbarConfig = {
     maskAllInputs: true,
   },
   source_map_enabled: true,
+  code_version: 'main',
   transform: transformer,
   tracing: {
     endpoint: 'api.rollbar.com/api/1/session/',
