@@ -21,12 +21,31 @@ const rollbarConfig = {
     blockClass: 'mask',
     maskAllInputs: true,
   },
+  /*
 server: {
           root: '/',
           branch: 'main'
       },
   source_map_enabled: true,
-  code_version: 'main',
+  code_version: 'main',*/
+   payload: {
+        person: {
+          id: 117,
+          email: "chief@abc.com",
+          username: "john-doe"
+        },
+        server: {
+          root: "../../",
+          branch: "main"
+        },
+        client: {
+          javascript: {
+            code_version: 'main',
+            source_map_enabled: true,
+            guess_uncaught_frames: true
+          }
+        }
+      }
  // transform: transformer,
   /*tracing: {
     endpoint: 'api.rollbar.com/api/1/session/',
