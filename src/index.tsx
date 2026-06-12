@@ -52,9 +52,8 @@ server: {
     transformSpan: ({span}: { span: any }) => {
       span.resource.attributes['rollbar.environment'] = true ? 'prod' : 'development';
   	}*/
-  },
+  };
   
-}
 
 const rollbar = new Rollbar(rollbarConfig);
 
