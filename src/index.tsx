@@ -5,12 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider, ErrorBoundary, LEVEL_WARN } from '@rollbar/react' // <-- Provider imports 'rollbar' for us
 import Rollbar from "rollbar/replay";
-
+/*
 var transformer = function(payload: any) {
     payload['environment'] =
       true ? 'prod' : 'development';
     };
-
+*/
 const rollbarConfig = {
   accessToken: '8bd244f3e70547379e9adc8a20d8b407',
   captureUncaught: true,
