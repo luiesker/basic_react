@@ -21,6 +21,9 @@ const rollbarConfig = {
     blockClass: 'mask',
     maskAllInputs: true,
   },
+  server: {
+    root: "../"
+  },
   source_map_enabled: true,
   code_version: 'main',
   transform: transformer,
