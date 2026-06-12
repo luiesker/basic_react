@@ -27,12 +27,12 @@ server: {
       },
   source_map_enabled: true,
   code_version: 'main',
-  transform: transformer,
-  tracing: {
+ // transform: transformer,
+  /*tracing: {
     endpoint: 'api.rollbar.com/api/1/session/',
     transformSpan: ({span}: { span: any }) => {
       span.resource.attributes['rollbar.environment'] = true ? 'prod' : 'development';
-  	}
+  	}*/
   },
   
 }
