@@ -36,7 +36,7 @@ server: {
         },
         server: {
           root: "/",
-          branch: "main"
+          branch: "main/src"
         },
         client: {
           javascript: {
