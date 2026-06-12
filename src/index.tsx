@@ -22,7 +22,7 @@ const rollbarConfig = {
     maskAllInputs: true,
   },
 server: {
-          root: '../../',
+          root: '/',
           branch: 'main'
       },
   source_map_enabled: true,
