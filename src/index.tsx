@@ -30,7 +30,8 @@ const rollbarConfig = {
   filterTelemetry: function(e: any) {
     return e.type === 'network'
       && (e.body.subtype === 'xhr');
-  },
+  }
+},
   /*
 server: {
           root: '/',
@@ -62,7 +63,7 @@ server: {
     transformSpan: ({span}: { span: any }) => {
       span.resource.attributes['rollbar.environment'] = true ? 'prod' : 'development';
   	}*/
-  }};
+  };
   
 
 const rollbar = new Rollbar(rollbarConfig);
