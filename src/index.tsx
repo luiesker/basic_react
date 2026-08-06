@@ -25,6 +25,7 @@ const rollbarConfig = {
       span.events = span.events.filter((e: any) => {
         if (e.name !== 'rollbar-network-event') return true;
         if (e.data && e.data.body && e.data.body.subtype === 'xhr') { return false; }
+        return true;
       });
   },
   filterTelemetry: function(e: any) {
