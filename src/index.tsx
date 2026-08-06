@@ -21,6 +21,10 @@ const rollbarConfig = {
     blockClass: 'mask',
     maskAllInputs: true,
   },
+  filterTelemetry: function(e: { type: string; body: { subtype: string; }; }) {
+    return e.type === 'network'
+      && (e.body.subtype === 'xhr');
+  },
   /*
 server: {
           root: '/',
