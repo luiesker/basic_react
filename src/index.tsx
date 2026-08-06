@@ -30,10 +30,10 @@ const rollbarConfig = {
       return true;
     });
   },
-  filterTelemetry: function(e: any) {
+  /*filterTelemetry: function(e: any) {
     return e.type === 'network'
       && (e.body.subtype === 'xhr');
-  }
+  }*/
 },
   /*
 server: {
