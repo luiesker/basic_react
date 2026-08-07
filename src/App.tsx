@@ -187,7 +187,7 @@ function App() {
           error: error,
           cartItems: cart,
           userId: 'user123',
-          "test-Test": 'test',
+          'test-Test': 'test',
           stackTrace: error instanceof Error ? error.stack : 'No stack trace available',
           clickSequence,
           interactionTimestamps,
