@@ -20,20 +20,18 @@ const rollbarConfig = {
     enabled: true,
     blockClass: 'mask',
     maskAllInputs: true,
+    transformSpan: function(span: any) {
+      if (span.name !== 'rollbar-telemetry') return; // don't touch the DOM/rrweb span
+      span.events = span.events.filter((e: any) => {
+        if (e.name !== 'rollbar-network-event') return true;
+        if (e.data && e.data.body && e.data.body.subtype === 'xhr') { return false; }
+        return true;
+      });
   },
-  tracing: {
-      transformSpan: function(span: any) {
-    if (span.name !== 'rollbar-telemetry') return; // don't touch the DOM/rrweb span
-    span.events = span.events.filter((e: any) => {
-      if (e.name !== 'rollbar-network-event') return true;
-      if (e.data && e.data.body && e.data.body.subtype === 'xhr') { return false; }
-      return true;
-    });
-  },
-  /*filterTelemetry: function(e: any) {
+  filterTelemetry: function(e: any) {
     return e.type === 'network'
       && (e.body.subtype === 'xhr');
-  }*/
+  }
 },
   /*
 server: {
